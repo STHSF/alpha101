@@ -30,8 +30,8 @@
 
 # 因子简介
 
-# Alpha#1	 (rank(Ts_ArgMax(SignedPower(((returns < 0) ? stddev(returns, 20) : close), 2.), 5)) -0.5)
-# Alpha#3	 (-1 * correlation(rank(open), rank(volume), 10))
+## Alpha#1	 (rank(Ts_ArgMax(SignedPower(((returns < 0) ? stddev(returns, 20) : close), 2.), 5)) -0.5)
+## Alpha#3	 (-1 * correlation(rank(open), rank(volume), 10))
 ## Alpha#4	 (-1 * Ts_Rank(rank(low), 9))
 ## Alpha#5	 (rank((open - (sum(vwap, 10) / 10))) * (-1 * abs(rank((close - vwap)))))
 ## Alpha#6	 (-1 * correlation(open, volume, 10))
