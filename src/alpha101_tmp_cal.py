@@ -107,11 +107,10 @@ if __name__ == '__main__':
 
         tmp = tmp.append(stock)
     # 计算结果保存到数据库
-    print(tmp)
-    # tmp.to_csv('test.csv')
-    # test_sql_engine = create_engine("mysql+mysqlconnector://root:1234@10.15.97.128:3306/test")
-    # tmp.to_sql(name='alpha101_tmp', con=test_sql_engine, chunksize=1000, if_exists='replace', index=True)
-    #
-    # with test_sql_engine.connect() as con:
-    #     con.execute('ALTER TABLE `alpha101_tmp_test` ADD PRIMARY KEY (`index`);')
+    tmp.to_csv('test.csv')
+    test_sql_engine = create_engine("mysql+mysqlconnector://root:1234@10.15.97.128:3306/test")
+    tmp.to_sql(name='alpha101_tmp', con=test_sql_engine, chunksize=1000, if_exists='replace', index=True)
+
+    with test_sql_engine.connect() as con:
+        con.execute('ALTER TABLE `alpha101_tmp_test` ADD PRIMARY KEY (`index`);')
 #
