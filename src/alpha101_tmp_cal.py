@@ -7,6 +7,8 @@
 @file: alpha101_tmp_cal.py
 @time: 2019-05-07 13:07
 """
+
+import pandas as pd
 from sqlalchemy import create_engine
 from src.alpha101_tmp import DataPrepare, Alpha101
 from src.alpha101_tmp_zzh import Alpha101Z26
@@ -16,8 +18,8 @@ if __name__ == '__main__':
     alpha_data = DataPrepare()
     security = ('000001.XSHE', '000002.XSHE', '000004.XSHE', '000006.XSHE', '000007.XSHE')
     # 获取数据
-    # stock_panel = alpha_data.get_basic_data("2010-01-01", "2018-12-30", stock_list=security)
-    stock_panel = alpha_data.get_data(stock_list=security)
+    stock_panel = alpha_data.get_basic_data("2010-01-01", "2018-12-30", stock_list=security)
+    # stock_panel = alpha_data.get_data()
     #
     stock_group = stock_panel.groupby('symbol')
     tmp = pd.DataFrame()
@@ -105,10 +107,11 @@ if __name__ == '__main__':
 
         tmp = tmp.append(stock)
     # 计算结果保存到数据库
+    print(tmp)
     # tmp.to_csv('test.csv')
-    test_sql_engine = create_engine("mysql+mysqlconnector://root:1234@10.15.97.128:3306/test")
-    tmp.to_sql(name='alpha101_tmp', con=test_sql_engine, chunksize=1000, if_exists='replace', index=True)
-
-    with test_sql_engine.connect() as con:
-        con.execute('ALTER TABLE `alpha101_tmp_test` ADD PRIMARY KEY (`index`);')
-
+    # test_sql_engine = create_engine("mysql+mysqlconnector://root:1234@10.15.97.128:3306/test")
+    # tmp.to_sql(name='alpha101_tmp', con=test_sql_engine, chunksize=1000, if_exists='replace', index=True)
+    #
+    # with test_sql_engine.connect() as con:
+    #     con.execute('ALTER TABLE `alpha101_tmp_test` ADD PRIMARY KEY (`index`);')
+#
