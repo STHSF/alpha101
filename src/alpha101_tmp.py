@@ -379,7 +379,7 @@ class DataPrepare(object):
         dependencies = ['close', 'open', 'high', 'low', 'pre_close', 'volume', 'money', 'trade_date', 'symbol']
         sql = "select * from vision.sk_daily_price where trade_date >='{}' and trade_date <='{}' and symbol in {}".format(
             start_date, end_date, stock_list)
-        sql_engine = create_engine("mysql+mysqlconnector://root:123@10.15.97.128:3306/vision")
+        sql_engine = create_engine("mysql+mysqlconnector://root:1234@10.15.97.128:3306/vision")
 
         sql_data = pd.read_sql(sql, sql_engine)
         # 先转化成multiindex
@@ -390,7 +390,7 @@ class DataPrepare(object):
         return res
 
     @pysnooper.snoop()
-    def get_data(self, stock_list):
+    def get_data(self):
         dependencies = ['close', 'open', 'high', 'low', 'pre_close', 'volume', 'money', 'trade_date', 'symbol']
         sql = "select * from vision.sk_daily_price"
         # sql = "select * from vision.sk_daily_price where symbol in {}".format(stock_list)
@@ -407,7 +407,7 @@ if __name__ == '__main__':
     security = ('000001.XSHE', '000002.XSHE', '000004.XSHE','000006.XSHE', '000007.XSHE')
     # 获取数据
     # stock_panel = alpha_data.get_basic_data("2010-01-01", "2018-12-30", stock_list=security)
-    stock_panel = alpha_data.get_data(stock_list=security)
+    stock_panel = alpha_data.get_data()
     #
     stock_group = stock_panel.groupby('symbol')
     tmp = pd.DataFrame()
