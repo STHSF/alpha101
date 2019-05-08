@@ -55,6 +55,7 @@ class Alpha101Z26(object):
         delta_close = delta(self.close, 1)
         alpha030_1 = sign(delta_close) + sign(delay(delta_close, 1)) + sign(delay(delta_close, 2))
         alpha030_2 = ts_sum(self.volume, 5) / ts_sum(self.volume, 20)
+        alpha030_2 = alpha030_2.replace([-np.inf, np.inf], 0).fillna(value=0)
         return alpha030_1, alpha030_2
 
     # Alpha#31	 ((rank(rank(rank(decay_linear_pn((-1 * rank(rank(delta(close, 10)))), 10)))) + rank((-1 *delta(close, 3)))) + sign(scale(correlation(adv20, low, 12))))
@@ -69,11 +70,13 @@ class Alpha101Z26(object):
     # Alpha#32	 (scale(((sum(close, 7) / 7) - close)) + (20 * scale(correlation(vwap, delay(close, 5),230))))
     def alpha032(self):
         return scale(((sma(self.close, 7) / 7) - self.close)) + (
-                20 * scale(correlation(self.vwap, delay(self.close, 5), 230)))
+                20 * scale(correlation(self.vwap, delay(self.close, 5), 230))).replace([-np.inf, np.inf], 0).fillna(
+            value=0)
 
     # Alpha#33	 rank((-1 * ((1 - (open / close))^1)))
     def alpha033(self):
         alpha033_1 = (-1 + (self.open / self.close))
+        alpha033_1 = alpha033_1.replace([-np.inf, np.inf], 0).fillna(value=0)
         return alpha033_1
 
     # Alpha#34	 rank(((1 - rank((stddev(returns, 2) / stddev(returns, 5)))) + (1 - rank(delta(close, 1)))))
@@ -96,12 +99,14 @@ class Alpha101Z26(object):
         alpha036_2 = self.open - self.close
         alpha036_3 = delay((-1 * self.returns), 6).replace([-np.inf, np.inf], 0).fillna(value=0)
         alpha036_4 = abs(correlation(self.vwap, adv20, 6)).replace([-np.inf, np.inf], 0).fillna(value=0)
-        alpha036_5 = ((sma(self.close, 200) / 200) - self.open) * (self.close - self.open)
+        alpha036_5 = ((sma(self.close, 200) / 200) - self.open) * (self.close - self.open).replace([-np.inf, np.inf],
+                                                                                                   0).fillna(value=0)
         return alpha036_1, alpha036_2, alpha036_3, alpha036_4, alpha036_5
 
     # Alpha#37	 (rank(correlation(delay((open - close), 1), close, 200)) + rank((open - close)))
     def alpha037(self):
-        alpha037_1 = correlation(delay(self.open - self.close, 1), self.close, 200)
+        alpha037_1 = correlation(delay(self.open - self.close, 1), self.close, 200).replace([-np.inf, np.inf],
+                                                                                            0).fillna(value=0)
         alpha037_2 = self.open - self.close
         return alpha037_1, alpha037_2
 
@@ -114,7 +119,8 @@ class Alpha101Z26(object):
     # Alpha#39	 ((-1 * rank((delta(close, 7) * (1 - rank(decay_linear_pn((volume / adv20), 9)))))) * (1 +rank(sum(returns, 250))))
     def alpha039(self):
         adv20 = sma(self.volume, 20)
-        alpha039_1 = decay_linear((self.volume / adv20).to_frame(), 9).CLOSE
+        alpha039_1 = decay_linear((self.volume / adv20).to_frame(), 9).CLOSE.replace([-np.inf, np.inf], 0).fillna(
+            value=0)
         alpha039_2 = sma(self.returns, 250)
         return alpha039_1, alpha039_2
 
@@ -138,6 +144,7 @@ class Alpha101Z26(object):
     def alpha043(self):
         adv20 = sma(self.volume, 20)
         alpha043_1 = self.volume / adv20
+        alpha043_1 = alpha043_1.replace([-np.inf, np.inf], 0).fillna(value=0)
         alpha043_2 = (-1 * delta(self.close, 7))
         return alpha043_1, alpha043_2
 
@@ -203,7 +210,9 @@ class Alpha101Z26(object):
     # Alpha#53	 (-1 * delta((((close - low) - (high - close)) / (close - low)), 9))
     def alpha053(self):
         inner = (self.close - self.low).replace(0, 0.0001)
-        return -1 * delta((((self.close - self.low) - (self.high - self.close)) / inner), 9)
+        return -1 * delta(
+            (((self.close - self.low) - (self.high - self.close)) / inner).replace([-np.inf, np.inf], 0).fillna(
+                value=0), 9)
 
     # Alpha#54	 ((-1 * ((low - close) * (open^5))) / ((low - high) * (close^5)))
     def alpha054(self):
@@ -213,7 +222,7 @@ class Alpha101Z26(object):
     # Alpha#55	 (-1 * correlation(rank(((close - ts_min(low, 12)) / (ts_max(high, 12) - ts_min(low,12)))), rank(volume), 6))
     def alpha055(self):
         divisor = (ts_max(self.high, 12) - ts_min(self.low, 12)).replace(0, 0.0001)
-        alpha055_1 = (self.close - ts_min(self.low, 12)) / (divisor)
+        alpha055_1 = ((self.close - ts_min(self.low, 12)) / (divisor)).replace([-np.inf, np.inf], 0).fillna(value=0)
         return alpha055_1
 
     # Alpha#56	 (0 - (1 * (rank((sum(returns, 10) / sum(sum(returns, 2), 3))) * rank((returns * cap)))))
@@ -235,7 +244,8 @@ class Alpha101Z26(object):
     # Alpha#60	 (0 - (1 * ((2 * scale(rank(((((close - low) - (high - close)) / (high - low)) * volume)))) -scale(rank(ts_argmax(close, 10))))))
     def alpha060(self):
         divisor = (self.high - self.low).replace(0, 0.0001)
-        alpha060_1 = ((self.close - self.low) - (self.high - self.close)) * self.volume / divisor
+        alpha060_1 = (((self.close - self.low) - (self.high - self.close)) * self.volume / divisor).replace(
+            [-np.inf, np.inf], 0).fillna(value=0)
         alpha060_2 = ts_argmax(self.close, 10)
         return alpha060_1, alpha060_2
 
@@ -285,7 +295,7 @@ class DataPrepare(object):
 
     def get_data(self, stock_list):
         dependencies = ['close', 'open', 'high', 'low', 'pre_close', 'volume', 'money', 'trade_date', 'symbol']
-        sql = "select * from vision.sk_daily_price where trade_date>'2018-01-01' and symbol in ('000001.XSHE', '000002.XSHE', '000004.XSHE', '000006.XSHE', '000007.XSHE')"
+        sql = "select * from vision.sk_daily_price where trade_date>'2010-01-01' and symbol in ('000001.XSHE', '000002.XSHE', '000004.XSHE', '000006.XSHE', '000007.XSHE')"
         # sql = "select * from vision.sk_daily_price where symbol in {}".format(stock_list)
         sql_engine = create_engine("mysql+mysqlconnector://root:1234@10.15.97.128:3306/vision")
         sql_data = pd.read_sql(sql, sql_engine)
