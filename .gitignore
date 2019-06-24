@@ -103,3 +103,5 @@ venv.bak/
 # mypy
 .mypy_cache/
 .idea/
+/600519.csv
+/src/factor_check/factor_correlation_test.py

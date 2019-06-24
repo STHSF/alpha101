@@ -382,7 +382,7 @@ class DataPrepare(object):
         sql_engine = create_engine("mysql+mysqlconnector://root:1234@10.15.97.128:3306/vision")
 
         sql_data = pd.read_sql(sql, sql_engine)
-        # 先转化成multiindex
+        # 先转化成panel
         res = sql_data[dependencies].set_index(['trade_date', 'symbol']).to_panel()
         res['returns'] = res['close'] / res['pre_close'] - 1
         res['vwap'] = (res['money'] * 1000) / (res['volume'] * 100 + 1)

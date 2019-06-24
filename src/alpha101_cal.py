@@ -36,10 +36,15 @@ if __name__ == '__main__':
     stock_panel = alpha_data.get_basic_data("2010-01-01", "2018-12-30", stock_list=security)
 
     start_time = time.time()
-    # alpha = Alpha101(stock_panel)
+    alpha = Alpha101(stock_panel)
     alpha_ = Alpha101Z26(stock_panel)
-    # pn = alpha.calculate()
+    pn = alpha.calculate()
     pn_ = alpha_.calculate()
-    # res = pn.join(pn_)
+    res = pn.join(pn_)
     print('spend time %s' % (time.time() - start_time))
-    print(pn_.minor_xs('600519.XSHG'))
+
+
+    print(res.minor_xs('600519.XSHG'))
+    # 数据保存， 用作相关性检验
+    res.minor_xs('600519.XSHG').to_csv('600519.csv')
+

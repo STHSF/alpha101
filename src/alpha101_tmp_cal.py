@@ -18,8 +18,8 @@ if __name__ == '__main__':
     alpha_data = DataPrepare()
     security = ('000001.XSHE', '000002.XSHE', '000004.XSHE', '000006.XSHE', '000007.XSHE')
     # 获取数据
-    stock_panel = alpha_data.get_basic_data("2010-01-01", "2018-12-30", stock_list=security)
-    # stock_panel = alpha_data.get_data()
+    # stock_panel = alpha_data.get_basic_data("2010-01-01", "2018-12-30", stock_list=security)
+    stock_panel = alpha_data.get_data()
     #
     stock_group = stock_panel.groupby('symbol')
     tmp = pd.DataFrame()
